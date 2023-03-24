@@ -4409,6 +4409,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3906627527033589160, guid: a139252be4c1f417e8f381dd99043830, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 018a95e75146f402685c22c93bc815fb, type: 2}
+    - target: {fileID: 6744071119329022328, guid: a139252be4c1f417e8f381dd99043830, type: 3}
+      propertyPath: m_Volume
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 6744071119329022328, guid: a139252be4c1f417e8f381dd99043830, type: 3}
       propertyPath: m_audioClip
       value: 

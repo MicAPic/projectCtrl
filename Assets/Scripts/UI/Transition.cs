@@ -49,7 +49,7 @@ namespace UI
             Recenter();
             if (mode is 'o' or 'e')
             {
-                SoundEffectsPlayer.getInstance().musicSourceAnimator.SetTrigger("Transition");
+                SoundEffectsPlayer.GetInstance().musicSourceAnimator.SetTrigger("Transition");
                 PlayerController.Instance.spriteAnimator.SetBool("IsWalking", false);
             }
             var img = GetComponent<Image>();
