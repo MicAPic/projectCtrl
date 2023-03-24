@@ -4775,7 +4775,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1142883131}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.1070528, y: 0.51999974, z: 0}
+  m_LocalPosition: {x: 3.17, y: 0.5599997, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10329,7 +10329,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteAnimator: {fileID: 1442215229803669428}
   playerSprite: {fileID: 2556579936876142020}
-  canMove: 0
+  canMove: 1
   movementSpeed: 6
   movementAcceleration: 6
   velocityPower: 1.2
@@ -10370,7 +10370,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3492341376512271446}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.222947, y: -2.22, z: 0}
+  m_LocalPosition: {x: -8.16, y: -2.18, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

@@ -279,7 +279,15 @@ MonoBehaviour:
   dialogueText: {fileID: 3917376918777523063}
   continueIcon: {fileID: 3917376918896781687}
   canvas: {fileID: 3917376918480270754}
+  finText: {fileID: 0}
   inkScript: {fileID: 4900000, guid: 15f6855627c5946ebad1d8d0acd46579, type: 3}
+  defaultAudioInfo: {fileID: 11400000, guid: dcef455696e8e4c879ff4f5afb4f7224, type: 2}
+  audioInfos:
+  - {fileID: 11400000, guid: 17328e031eb6c48e3ac392d333ab036e, type: 2}
+  - {fileID: 11400000, guid: aaf66ccb6f7ca482c98cafa8fb9d85be, type: 2}
+  - {fileID: 11400000, guid: c9801446c15c047978e7bbfa1f0fe6a8, type: 2}
+  frequencyLevel: 2
+  stopAudioSource: 0
 --- !u!1 &3917376918480270754
 GameObject:
   m_ObjectHideFlags: 0
@@ -663,6 +671,7 @@ GameObject:
   - component: {fileID: 3917376918896781672}
   - component: {fileID: 3917376918896781674}
   - component: {fileID: 3917376918896781673}
+  - component: {fileID: 7908598931396376818}
   m_Layer: 0
   m_Name: ContinueArrow
   m_TagString: Untagged
@@ -728,3 +737,23 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!95 &7908598931396376818
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3917376918896781687}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8223a9a8680784571b78b511c1a93215, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0

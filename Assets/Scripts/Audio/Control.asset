@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df6c66309ec8b4ae2aad347133f66f87, type: 3}
+  m_Name: Control
+  m_EditorClassIdentifier: 
+  id: Ctrl
+  typingAudioClips:
+  - {fileID: 8300000, guid: 6fab3fae96e614871b07f3b091d3ea8a, type: 3}
+  - {fileID: 8300000, guid: 9a3da89aa941e4970bd0c87d730ce687, type: 3}
+  - {fileID: 8300000, guid: fbf7f7e8f226449bca8a857f35b13f50, type: 3}
+  - {fileID: 8300000, guid: 0f64086ad9f88497dbd99e277803a25d, type: 3}
+  - {fileID: 8300000, guid: 2ee0f5f4a6f1e4f438bd37613acafa07, type: 3}
+  minPitch: 0.65
+  maxPitch: 0.8
