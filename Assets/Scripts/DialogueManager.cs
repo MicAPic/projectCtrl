@@ -16,6 +16,10 @@ public class DialogueManager : MonoBehaviour
     [SerializeField]
     private float skipCooldownTime = 0.5f;
     
+    [Header("Camera")]
+    [SerializeField] 
+    private GameObject dialogueCamera;
+
     [Header("UI")]
     [SerializeField] 
     private TMP_Text nameText;
@@ -25,6 +29,7 @@ public class DialogueManager : MonoBehaviour
     private GameObject continueIcon;
     [SerializeField] 
     private GameObject canvas;
+    private Animator _canvasAnimator;
     [SerializeField] 
     private GameObject finText;
     
@@ -49,6 +54,7 @@ public class DialogueManager : MonoBehaviour
     private bool stopAudioSource;
     
     private bool _isPlaying;
+    private bool _isDisplayingRichText;
     private int _maxLineLength;
     private bool _canContinue;
     private bool _canSkip;
@@ -68,38 +74,8 @@ public class DialogueManager : MonoBehaviour
         _audioSource = gameObject.AddComponent<AudioSource>();
         InitializeAudioInfoDictionary();
         _currentAudioInfo = defaultAudioInfo;
-    }
 
-    public void StartDialogue()
-    {
-        canvas.SetActive(true);
-
-        PlayerController.Instance._rigidbody.velocity = Vector2.zero;
-        PlayerController.Instance.canMove = false;
-        
-        _story = new Story(inkScript.text);
-        _story.BindExternalFunction("finishLevel", (string mode) =>
-        {
-            dialogueText.transform.parent.parent.gameObject.SetActive(false);
-            Transition.Instance.duration = 3.0f;
-            StartCoroutine(Transition.Instance.Fade(mode[0]));
-            StartCoroutine(ShowFinText());
-        });
-        _isPlaying = true;
-
-        ContinueStory();
-    }
-
-    private IEnumerator ShowFinText()
-    {
-        yield return new WaitForSeconds(2.0f);
-        if (finText != null) finText.SetActive(true);
-        yield return new WaitForSeconds(5.0f);
-        #if UNITY_EDITOR
-        EditorApplication.ExitPlaymode();
-        #else
-        Application.Quit();
-        #endif
+        _canvasAnimator = canvas.GetComponent<Animator>();
     }
 
     void Update()
@@ -123,6 +99,34 @@ public class DialogueManager : MonoBehaviour
             }
         }
     }
+    
+    public void StartDialogue()
+    {
+        dialogueCamera.SetActive(true);
+        canvas.SetActive(true);
+
+        PlayerController.Instance._rigidbody.velocity = Vector2.zero;
+        PlayerController.Instance.canMove = false;
+        
+        _story = new Story(inkScript.text);
+        _story.BindExternalFunction("finishLevel", (string mode) =>
+        {
+            // canvas.SetActive(false);
+            _canvasAnimator.SetTrigger("Disable");
+            Transition.Instance.duration = 3.0f;
+            StartCoroutine(Transition.Instance.Fade(mode[0]));
+            StartCoroutine(ShowFinText());
+        });
+        _isPlaying = true;
+
+        StartCoroutine(WaitBeforeDisplayingText());
+    }
+    
+    private IEnumerator WaitBeforeDisplayingText()
+    {
+        yield return new WaitForSeconds(0.66f);
+        ContinueStory();
+    }
 
     private void ContinueStory()
     {
@@ -141,6 +145,8 @@ public class DialogueManager : MonoBehaviour
         else
         {
             _isPlaying = false;
+            dialogueCamera.SetActive(false);
+            _canvasAnimator.SetTrigger("Disable");
             StartCoroutine(WaitBeforeGivingControl());
         }
     }
@@ -149,7 +155,7 @@ public class DialogueManager : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         PlayerController.Instance.canMove = true;
-        Destroy(gameObject);
+        // canvas.SetActive(false);
     }
 
     private IEnumerator DisplayLine(string line)
@@ -165,6 +171,23 @@ public class DialogueManager : MonoBehaviour
         _skipCooldownCoroutine = StartCoroutine(SkipCooldown());
         for (var i = 0; i < _maxLineLength; i++)
         {
+            // rich text
+            switch (dialogueText.text[i])
+            {
+                case '<':
+                    _isDisplayingRichText = true;
+                    break;
+                case '>':
+                    _isDisplayingRichText = false;
+                    _maxLineLength--;
+                    break;
+            }
+        
+            if (_isDisplayingRichText)
+            {
+                _maxLineLength--;
+            }
+            //
             PlayDialogueSound(i, dialogueText.text[i]);
             dialogueText.maxVisibleCharacters++;
             yield return new WaitForSeconds(textSpeed);
@@ -181,7 +204,6 @@ public class DialogueManager : MonoBehaviour
 
     private void FinishDisplayingLine()
     {
-        // DisplayChoices();
         continueIcon.SetActive(true);
         _canContinue = true;
         _canSkip = true;
@@ -267,5 +289,18 @@ public class DialogueManager : MonoBehaviour
         {
             Debug.LogWarning("Failed to find audio for id: " + id);
         }
+    }
+    
+    
+    private IEnumerator ShowFinText()
+    {
+        yield return new WaitForSeconds(2.0f);
+        if (finText != null) finText.SetActive(true);
+        yield return new WaitForSeconds(5.0f);
+        #if UNITY_EDITOR
+            EditorApplication.ExitPlaymode();
+        #else
+            Application.Quit();
+        #endif
     }
 }

@@ -8,6 +8,7 @@ public class DialogueTrigger : MonoBehaviour
         {
             Debug.Log("Started Dialogue");
             DialogueManager.Instance.StartDialogue();
+            Destroy(gameObject);
         }
     }
 }

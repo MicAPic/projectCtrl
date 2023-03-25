@@ -88,14 +88,6 @@ public class PlayerController : MonoBehaviour
     {
         // Animation
         spriteAnimator.SetBool("IsWalking", _rigidbody.velocity.magnitude > 0.15f);
-        if (Input.GetAxisRaw("Horizontal") > 0)
-        {
-            playerSprite.flipX = false;
-        }
-        else if (Input.GetAxisRaw("Horizontal") < 0)
-        {
-            playerSprite.flipX = true;
-        }
 
         // Timers
         _lastOnGroundTime -= Time.deltaTime;
@@ -120,6 +112,16 @@ public class PlayerController : MonoBehaviour
         }
 
         if (!canMove) return;
+        
+        // Turning
+        if (Input.GetAxisRaw("Horizontal") > 0)
+        {
+            playerSprite.flipX = false;
+        }
+        else if (Input.GetAxisRaw("Horizontal") < 0)
+        {
+            playerSprite.flipX = true;
+        }
 
         // Input Processing
         if (Input.GetKeyDown(KeyCode.Space)) // jump

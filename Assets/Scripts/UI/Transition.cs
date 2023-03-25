@@ -38,24 +38,20 @@ namespace UI
             StartCoroutine(Fade('i'));
         }
 
-        // Update is called once per frame
-        // void Update()
-        // {
-        //
-        // }
-
         public IEnumerator Fade(char mode, string sceneToLoad="Level 1")
         {
             Recenter();
             if (mode is 'o' or 'e')
             {
                 SoundEffectsPlayer.GetInstance().musicSourceAnimator.SetTrigger("Transition");
+                
+                PlayerController.Instance.canMove = false;
                 PlayerController.Instance.spriteAnimator.SetBool("IsWalking", false);
+                PlayerController.Instance._rigidbody.velocity = Vector2.zero;
             }
             var img = GetComponent<Image>();
             img.raycastTarget = false;
-            PlayerController.Instance.canMove = false;
-            
+
             var currentTime = 0.0f;
             var start = _rectTransform.rect.size;
             var end = mode == 'i' ? _maxSize : Vector2.zero;
