@@ -290,8 +290,7 @@ public class DialogueManager : MonoBehaviour
             Debug.LogWarning("Failed to find audio for id: " + id);
         }
     }
-    
-    
+
     private IEnumerator ShowFinText()
     {
         yield return new WaitForSeconds(2.0f);

@@ -289,7 +289,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: aaf66ccb6f7ca482c98cafa8fb9d85be, type: 2}
   - {fileID: 11400000, guid: c9801446c15c047978e7bbfa1f0fe6a8, type: 2}
   frequencyLevel: 2
-  stopAudioSource: 0
+  stopAudioSource: 1
 --- !u!1 &3917376918480270754
 GameObject:
   m_ObjectHideFlags: 0
