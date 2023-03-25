@@ -186,6 +186,17 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public Vector3 GetCenterBasedViewPortPosition()
+    {
+        var viewportPosition = Camera.main!.WorldToViewportPoint(transform.position);
+        return viewportPosition - new Vector3(0.5f, 0.5f, 0);
+    }
+
+    public Vector3 GetScreenPosition()
+    {
+        return Camera.main!.WorldToScreenPoint(transform.position);
+    }
+
     private void RecalculateThrowDirection()
     {
         _throwDirection = Input.mousePosition - Camera.main!.WorldToScreenPoint(transform.position);

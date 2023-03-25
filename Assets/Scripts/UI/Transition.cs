@@ -76,8 +76,7 @@ namespace UI
         
         private void Recenter()
         {
-            var viewportPosition = Camera.main!.WorldToViewportPoint(PlayerController.Instance.transform.position);
-            var centerBasedViewPortPosition = viewportPosition - new Vector3(0.5f, 0.5f, 0);
+            var centerBasedViewPortPosition = PlayerController.Instance.GetCenterBasedViewPortPosition();
             var canvasRect = transform.parent.GetComponent<RectTransform>();
             var scale = canvasRect.sizeDelta;
 
