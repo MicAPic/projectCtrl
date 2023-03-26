@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class LaserWithParticle : MonoBehaviour
 {
-    [SerializeField] private float distanceRay = 100;
-    [SerializeField] private Transform laserFirePoint;
+    [SerializeField] 
+    private float distanceRay = 100;
+    [SerializeField] 
+    private Transform laserFirePoint;
     public LineRenderer lineRenderer;
 
     //public ParticleSystem laserStartParticles;
@@ -23,7 +25,8 @@ public class LaserWithParticle : MonoBehaviour
     {
         ShootLaser();
     }
-    private bool soundWasPlayed = false;
+    
+    private bool soundWasPlayed;
 
     private void ShootLaser()
     {
@@ -34,11 +37,11 @@ public class LaserWithParticle : MonoBehaviour
             {
                 
 
-                if (hit.collider.GetType() == typeof(CapsuleCollider2D))
+                if (hit.collider is CapsuleCollider2D)
                 {
                     if (!soundWasPlayed)
                     {
-                        SoundEffectsPlayer.getInstance().Hurt();
+                        SoundEffectsPlayer.GetInstance().Hurt();
                         soundWasPlayed = true;
                     }
                     Debug.Log(hit.collider);

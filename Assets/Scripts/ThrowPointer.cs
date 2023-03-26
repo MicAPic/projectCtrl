@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class ThrowPointer : MonoBehaviour
@@ -10,7 +9,6 @@ public class ThrowPointer : MonoBehaviour
     void Update()
     {
         var playerScreenPos = PlayerController.Instance.GetScreenPosition();
-        Debug.Log(playerScreenPos);
         var mousePosition = Input.mousePosition;
         var angle = Mathf.Atan2(mousePosition.y - playerScreenPos.y, 
                                     mousePosition.x - playerScreenPos.x) * Mathf.Rad2Deg;

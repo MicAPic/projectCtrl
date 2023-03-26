@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Ink.Runtime;
@@ -102,6 +103,8 @@ public class DialogueManager : MonoBehaviour
     
     public void StartDialogue()
     {
+        if (canvas.activeInHierarchy) return;
+        
         dialogueCamera.SetActive(true);
         canvas.SetActive(true);
 
@@ -117,7 +120,6 @@ public class DialogueManager : MonoBehaviour
             StartCoroutine(Transition.Instance.Fade(mode[0]));
             StartCoroutine(ShowFinText());
         });
-        _isPlaying = true;
 
         StartCoroutine(WaitBeforeDisplayingText());
     }
@@ -126,6 +128,7 @@ public class DialogueManager : MonoBehaviour
     {
         yield return new WaitForSeconds(0.66f);
         ContinueStory();
+        _isPlaying = true;
     }
 
     private void ContinueStory()
