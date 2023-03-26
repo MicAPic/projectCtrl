@@ -5,7 +5,7 @@ namespace Buttons
     public class LaserButton : Button
     {
         [SerializeField] 
-        private Laser laser;
+        private LaserWithParticle laser;
 
         protected override void OnTriggerEnter2D(Collider2D other)
         {
@@ -14,6 +14,7 @@ namespace Buttons
             if (CheckPress())
             {
                 laser.lineRenderer.enabled = false;
+                laser.DisableParticle();
                 Destroy(laser);
             }
         }
