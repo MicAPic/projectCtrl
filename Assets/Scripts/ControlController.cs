@@ -3,15 +3,21 @@ using UnityEngine;
 public class ControlController : MonoBehaviour
 {
     public static ControlController Instance;
-    [SerializeField] private Transform groundCheckPoint;
-    private Vector2 groundCheckSize = new(0.49f, 0.03f);
+    
     [Header("General")] 
     private Vector2 _defaultPos;
     public bool isHeld;
 
+    [Header("Accessibility")] 
+    [SerializeField]
+    private GameObject pointer;
+
     [Header("Physics")] 
     [SerializeField] 
     private float throwingForce;
+    [SerializeField] 
+    private Transform groundCheckPoint;
+    private Vector2 groundCheckSize = new(0.49f, 0.03f);
     private BoxCollider2D _collider;
     private Rigidbody2D _rigidbody;
 
@@ -33,8 +39,7 @@ public class ControlController : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody2D>();
         _collider = GetComponent<BoxCollider2D>();
-
-
+        
         _defaultPos = new Vector3(0, 1.54999995f, 0);
     }
 
@@ -57,6 +62,7 @@ public class ControlController : MonoBehaviour
         _rigidbody.simulated = true;
         _collider.enabled = true;
         isHeld = false;
+        pointer.SetActive(false);
 
         _rigidbody.velocity = velocity;
         _rigidbody.AddForce(direction.normalized * throwingForce, ForceMode2D.Impulse);
@@ -67,6 +73,8 @@ public class ControlController : MonoBehaviour
         _rigidbody.simulated = false;
         _collider.enabled = false;
         isHeld = true;
+        pointer.SetActive(true);
+        
         transform.localPosition = _defaultPos;
     }
 }

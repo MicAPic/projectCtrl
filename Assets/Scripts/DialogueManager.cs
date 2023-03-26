@@ -16,6 +16,10 @@ public class DialogueManager : MonoBehaviour
     [SerializeField]
     private float skipCooldownTime = 0.5f;
     
+    [Header("Camera")]
+    [SerializeField] 
+    private GameObject dialogueCamera;
+
     [Header("UI")]
     [SerializeField] 
     private TMP_Text nameText;
@@ -25,6 +29,7 @@ public class DialogueManager : MonoBehaviour
     private GameObject continueIcon;
     [SerializeField] 
     private GameObject canvas;
+    private Animator _canvasAnimator;
     [SerializeField] 
     private GameObject finText;
     
@@ -33,9 +38,24 @@ public class DialogueManager : MonoBehaviour
     private TextAsset inkScript;
     private Story _story;
     private const string SpeakerTag = "speaker";
+
+    [Header("Audio")] 
+    [SerializeField] 
+    private DialogueAudioInfo defaultAudioInfo;
+    [SerializeField] 
+    private DialogueAudioInfo[] audioInfos;
+    private DialogueAudioInfo _currentAudioInfo;
+    private Dictionary<string, DialogueAudioInfo> audioInfoConfigurations;
+    [Range(1, 5)]
+    [SerializeField] 
+    private int frequencyLevel = 2;
+    private AudioSource _audioSource;
+    [SerializeField]
+    private bool stopAudioSource;
     
     private bool _isPlaying;
-    private int _currentLineLength;
+    private bool _isDisplayingRichText;
+    private int _maxLineLength;
     private bool _canContinue;
     private bool _canSkip;
     private Coroutine _displayLineCoroutine;
@@ -50,38 +70,12 @@ public class DialogueManager : MonoBehaviour
         }
 
         Instance = this;
-    }
-
-    public void StartDialogue()
-    {
-        canvas.SetActive(true);
-
-        PlayerController.Instance._rigidbody.velocity = Vector2.zero;
-        PlayerController.Instance.canMove = false;
         
-        _story = new Story(inkScript.text);
-        _story.BindExternalFunction("finishLevel", (string mode) =>
-        {
-            dialogueText.transform.parent.parent.gameObject.SetActive(false);
-            Transition.Instance.duration = 3.0f;
-            StartCoroutine(Transition.Instance.Fade(mode[0]));
-            StartCoroutine(ShowFinText());
-        });
-        _isPlaying = true;
+        _audioSource = gameObject.AddComponent<AudioSource>();
+        InitializeAudioInfoDictionary();
+        _currentAudioInfo = defaultAudioInfo;
 
-        ContinueStory();
-    }
-
-    private IEnumerator ShowFinText()
-    {
-        yield return new WaitForSeconds(2.0f);
-        if (finText != null) finText.SetActive(true);
-        yield return new WaitForSeconds(5.0f);
-        #if UNITY_EDITOR
-        EditorApplication.ExitPlaymode();
-        #else
-        Application.Quit();
-        #endif
+        _canvasAnimator = canvas.GetComponent<Animator>();
     }
 
     void Update()
@@ -100,19 +94,39 @@ public class DialogueManager : MonoBehaviour
             else if (_canSkip)
             {
                 StopCoroutine(_displayLineCoroutine);
-                dialogueText.maxVisibleCharacters = _currentLineLength;
+                dialogueText.maxVisibleCharacters = _maxLineLength;
                 FinishDisplayingLine();
             }
         }
     }
+    
+    public void StartDialogue()
+    {
+        dialogueCamera.SetActive(true);
+        canvas.SetActive(true);
 
-    // public void SelectChoice(int id)
-    // {
-    //     if (_canContinue)
-    //     {
-    //         _story.ChooseChoiceIndex(id);
-    //     }
-    // }
+        PlayerController.Instance._rigidbody.velocity = Vector2.zero;
+        PlayerController.Instance.canMove = false;
+        
+        _story = new Story(inkScript.text);
+        _story.BindExternalFunction("finishLevel", (string mode) =>
+        {
+            // canvas.SetActive(false);
+            _canvasAnimator.SetTrigger("Disable");
+            Transition.Instance.duration = 3.0f;
+            StartCoroutine(Transition.Instance.Fade(mode[0]));
+            StartCoroutine(ShowFinText());
+        });
+        _isPlaying = true;
+
+        StartCoroutine(WaitBeforeDisplayingText());
+    }
+    
+    private IEnumerator WaitBeforeDisplayingText()
+    {
+        yield return new WaitForSeconds(0.66f);
+        ContinueStory();
+    }
 
     private void ContinueStory()
     {
@@ -123,12 +137,16 @@ public class DialogueManager : MonoBehaviour
             {
                 StopCoroutine(_skipCooldownCoroutine);
             }
-            _displayLineCoroutine = StartCoroutine(DisplayLine(_story.Continue()));
+
+            string nextLine = _story.Continue();
             HandleTags(_story.currentTags);
+            _displayLineCoroutine = StartCoroutine(DisplayLine(nextLine));
         }
         else
         {
             _isPlaying = false;
+            dialogueCamera.SetActive(false);
+            _canvasAnimator.SetTrigger("Disable");
             StartCoroutine(WaitBeforeGivingControl());
         }
     }
@@ -137,22 +155,40 @@ public class DialogueManager : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         PlayerController.Instance.canMove = true;
-        Destroy(gameObject);
+        // canvas.SetActive(false);
     }
 
     private IEnumerator DisplayLine(string line)
     {
         dialogueText.maxVisibleCharacters = 0;
         dialogueText.text = line;
-        _currentLineLength = line.Length;
+        _maxLineLength = line.Length;
 
         continueIcon.SetActive(false);
         _canContinue = false;
         _canSkip = false;
 
         _skipCooldownCoroutine = StartCoroutine(SkipCooldown());
-        for (var _ = 0; _ < _currentLineLength; _++)
+        for (var i = 0; i < _maxLineLength; i++)
         {
+            // rich text
+            switch (dialogueText.text[i])
+            {
+                case '<':
+                    _isDisplayingRichText = true;
+                    break;
+                case '>':
+                    _isDisplayingRichText = false;
+                    _maxLineLength--;
+                    break;
+            }
+        
+            if (_isDisplayingRichText)
+            {
+                _maxLineLength--;
+            }
+            //
+            PlayDialogueSound(i, dialogueText.text[i]);
             dialogueText.maxVisibleCharacters++;
             yield return new WaitForSeconds(textSpeed);
         }
@@ -168,33 +204,43 @@ public class DialogueManager : MonoBehaviour
 
     private void FinishDisplayingLine()
     {
-        // DisplayChoices();
         continueIcon.SetActive(true);
         _canContinue = true;
         _canSkip = true;
     }
 
-    // private void DisplayChoices()
-    // {
-    //     List<Choice> currentChoices = _story.currentChoices;
-    //
-    //     for (int i = 0; i < currentChoices.Count; i++)
-    //     {
-    //         var button = Instantiate(choiceButtonPrefab, choiceContainer, false);
-    //         button.GetComponentInChildren<TMP_Text>().text = currentChoices[i].text;
-    //         
-    //         var choiceIndex = i;
-    //         button.onClick.AddListener(() => SelectChoice(choiceIndex));
-    //     }
-    // }
-    //
-    // private void ClearChoices()
-    // {
-    //     foreach (Transform child in choiceContainer)
-    //     {
-    //         Destroy(child.gameObject);
-    //     }
-    // }
+    private void PlayDialogueSound(int currentLineLength, char currentCharacter)
+    {
+        if (currentLineLength % frequencyLevel != 0) return;
+        
+        var typingAudioClips = _currentAudioInfo.typingAudioClips;
+        var minPitch = _currentAudioInfo.minPitch;
+        var maxPitch = _currentAudioInfo.maxPitch;
+
+        if (stopAudioSource)
+        {
+            _audioSource.Stop();
+        }
+
+        // clip
+        var characterHash = currentCharacter.GetHashCode();
+        var audioClip = typingAudioClips[characterHash % typingAudioClips.Length];
+        
+        // pitch
+        var maxPitchInt = (int) maxPitch * 100;
+        var minPitchInt = (int) minPitch * 100;
+        var pitchRange = maxPitchInt - minPitchInt;
+        if (pitchRange != 0)
+        {
+            _audioSource.pitch = (characterHash % pitchRange + minPitchInt) / 100f; 
+        }
+        else
+        {
+            _audioSource.pitch = minPitch;
+        }
+        
+        _audioSource.PlayOneShot(audioClip);
+    }
 
     private void HandleTags(List<string> currentTags)
     {
@@ -213,11 +259,47 @@ public class DialogueManager : MonoBehaviour
             {
                 case SpeakerTag:
                     nameText.text = value;
+                    SetCurrentAudioInfo(value);
                     break;
                 default:
                     Debug.LogWarning("Given tag is not implemented:" + key);
                     break;
             }
         }
+    }
+
+    private void InitializeAudioInfoDictionary()
+    {
+        audioInfoConfigurations = new Dictionary<string, DialogueAudioInfo> {{defaultAudioInfo.id, defaultAudioInfo}};
+        foreach (var audioInfo in audioInfos)
+        {
+            audioInfoConfigurations.Add(audioInfo.id, audioInfo);
+        }
+    }
+
+    private void SetCurrentAudioInfo(string id)
+    {
+        audioInfoConfigurations.TryGetValue(id, out var audioInfo);
+
+        if (audioInfo != null)
+        {
+            _currentAudioInfo = audioInfo;
+        }
+        else
+        {
+            Debug.LogWarning("Failed to find audio for id: " + id);
+        }
+    }
+
+    private IEnumerator ShowFinText()
+    {
+        yield return new WaitForSeconds(2.0f);
+        if (finText != null) finText.SetActive(true);
+        yield return new WaitForSeconds(5.0f);
+        #if UNITY_EDITOR
+            EditorApplication.ExitPlaymode();
+        #else
+            Application.Quit();
+        #endif
     }
 }

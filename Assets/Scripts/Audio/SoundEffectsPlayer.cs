@@ -2,18 +2,18 @@ using UnityEngine;
 
 public class SoundEffectsPlayer : MonoBehaviour
 {
-    private static SoundEffectsPlayer instance;
+    private static SoundEffectsPlayer _instance;
  
-    public static SoundEffectsPlayer getInstance()
+    public static SoundEffectsPlayer GetInstance()
     {
-        if (instance == null)
-            instance = new SoundEffectsPlayer();
-        return instance;
+        if (_instance == null)
+            _instance = new SoundEffectsPlayer();
+        return _instance;
     }
 
     private void Awake()
     {
-        instance = this;
+        _instance = this;
     }
     
     public Animator musicSourceAnimator;
@@ -25,19 +25,19 @@ public class SoundEffectsPlayer : MonoBehaviour
 
     public void Button()
     {
-        sfxSource.volume = 1.0f;
+        sfxSource.volume = 0.5f;
         sfxSource.clip = button;
         sfxSource.Play();
     }
     public void Door()
     {
-        sfxSource.volume = 0.7f;
+        sfxSource.volume = 0.1f;
         sfxSource.clip = door;
         sfxSource.Play();
     }
     public void Hurt()
     {
-        sfxSource.volume = 0.5f;
+        sfxSource.volume = 0.1f;
         sfxSource.clip = hurt;
         sfxSource.Play();
     }

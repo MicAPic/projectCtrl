@@ -14,7 +14,7 @@ public abstract class Button : MonoBehaviour
     {
         if(buttonPressed && !_soundWasPlayed)
         {
-            SoundEffectsPlayer.getInstance().Button();
+            SoundEffectsPlayer.GetInstance().Button();
             _soundWasPlayed = true;
         }
 

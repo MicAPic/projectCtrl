@@ -73,3 +73,7 @@ crashlytics-build.properties
 
 # macOS stuff
 .DS_Store
+.idea/.idea.projectCtrl/.idea/indexLayout.xml
+.idea/.idea.projectCtrl/.idea/projectSettingsUpdater.xml
+.idea/.idea.projectCtrl/.idea/workspace.xml
+.idea/.idea.projectCtrl/.idea/vcs.xml
