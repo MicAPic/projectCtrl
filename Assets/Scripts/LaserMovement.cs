@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class LaserMovement : MonoBehaviour
 {
-    [SerializeField] private Transform playerTransform;
-    public bool isX;
+    [SerializeField] 
+    private Transform playerTransform;
+    [SerializeField]
+    private bool isX;
+    [SerializeField] 
+    private float yOffset;
     private float _xPosition;
     private float _yPosition;
     void Start()
@@ -17,14 +21,7 @@ public class LaserMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isX)
-        {
-            transform.position = new Vector3(playerTransform.position.x, _yPosition, 0);
-        }
-        else
-        {
-            transform.position = new Vector3(_xPosition, playerTransform.position.y, 0);
-        }
-
+        transform.position = isX ? new Vector3(playerTransform.position.x, _yPosition, 0) : 
+                                   new Vector3(_xPosition, playerTransform.position.y + yOffset, 0);
     }
 }

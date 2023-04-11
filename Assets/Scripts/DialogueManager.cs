@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using Ink.Runtime;
 using TMPro;
 using UI;
@@ -39,6 +40,13 @@ public class DialogueManager : MonoBehaviour
     private TextAsset inkScript;
     private Story _story;
     private const string SpeakerTag = "speaker";
+    private const string AnimateTag = "animate";
+
+    [Header("Animation")] 
+    [SerializeField] 
+    private float punchStrength = 0.004341f;
+    [SerializeField] 
+    private float punchDuration = 0.485f;
 
     [Header("Audio")] 
     [SerializeField] 
@@ -92,7 +100,7 @@ public class DialogueManager : MonoBehaviour
             {
                 ContinueStory();   
             }
-            else if (_canSkip)
+            else if (_canSkip && _story.canContinue)
             {
                 StopCoroutine(_displayLineCoroutine);
                 dialogueText.maxVisibleCharacters = _maxLineLength;
@@ -158,7 +166,6 @@ public class DialogueManager : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         PlayerController.Instance.canMove = true;
-        // canvas.SetActive(false);
     }
 
     private IEnumerator DisplayLine(string line)
@@ -207,6 +214,7 @@ public class DialogueManager : MonoBehaviour
 
     private void FinishDisplayingLine()
     {
+        _isDisplayingRichText = false;
         continueIcon.SetActive(true);
         _canContinue = true;
         _canSkip = true;
@@ -264,6 +272,9 @@ public class DialogueManager : MonoBehaviour
                     nameText.text = value;
                     SetCurrentAudioInfo(value);
                     break;
+                case AnimateTag:
+                    AnimateSpeaker(value);
+                    break;
                 default:
                     Debug.LogWarning("Given tag is not implemented:" + key);
                     break;
@@ -292,6 +303,13 @@ public class DialogueManager : MonoBehaviour
         {
             Debug.LogWarning("Failed to find audio for id: " + id);
         }
+    }
+
+    private void AnimateSpeaker(string speakerName)
+    {
+        var speakerTransform = GameObject.Find(speakerName).transform;
+
+        speakerTransform.DOPunchScale(Vector3.down * punchStrength, punchDuration, 0);
     }
 
     private IEnumerator ShowFinText()

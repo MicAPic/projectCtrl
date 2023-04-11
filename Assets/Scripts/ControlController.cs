@@ -1,3 +1,5 @@
+using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 
 public class ControlController : MonoBehaviour
@@ -44,10 +46,10 @@ public class ControlController : MonoBehaviour
     }
 
      //Update is called once per frame
-
      void Update()
      {
-        Collider2D col = Physics2D.OverlapBox(groundCheckPoint.position, groundCheckSize, 0, _groundLayerMask);
+        Collider2D col = Physics2D.OverlapBox(groundCheckPoint.position, groundCheckSize, 0, 
+                                              _groundLayerMask);
         if (col)
         {
             if (!col.transform.CompareTag("CTRL"))
