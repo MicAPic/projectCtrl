@@ -28,7 +28,7 @@ public class Laser : MonoBehaviour
                 Debug.Log(hit.collider);
                 if (!_isSoundPlayed)
                 {
-                    SoundEffectsPlayer.GetInstance().Hurt();
+                    SoundEffectsPlayer.Instance.Hurt();
                     _isSoundPlayed = true;
                 }
                 PlayerController.Instance.Restart();

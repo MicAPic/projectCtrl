@@ -212,6 +212,6 @@ public class PlayerController : MonoBehaviour
         canMove = false;
         _rigidbody.velocity = Vector2.zero;
         spriteAnimator.SetBool("IsWalking", false);
-        StartCoroutine(Transition.Instance.Fade('o', SceneManager.GetActiveScene().name));
+        StartCoroutine(Transition.Instance.Fade('r', SceneManager.GetActiveScene().name));
     }
 }

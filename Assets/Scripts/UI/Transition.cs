@@ -40,10 +40,23 @@ namespace UI
 
         public IEnumerator Fade(char mode, string sceneToLoad="Level 1")
         {
+            // i: into the level
+            // o: out of the level
+            // r: restart the level
+            // e: end the game
+            
+            // TODO: never do this shit again, actually
+            
             Recenter();
-            if (mode is 'o' or 'e')
+            if (mode is not 'i')
             {
-                SoundEffectsPlayer.GetInstance().musicSourceAnimator.SetTrigger("Transition");
+                if (mode is not 'r')
+                {
+                    SoundEffectsPlayer.Instance.musicSourceAnimator.SetTrigger("Transition");
+                    // un-DontDestroyOnLoad the SFX player:
+                    SceneManager.MoveGameObjectToScene(SoundEffectsPlayer.Instance.transform.parent.gameObject,
+                        SceneManager.GetActiveScene());
+                }
                 
                 PlayerController.Instance.canMove = false;
                 PlayerController.Instance.spriteAnimator.SetBool("IsWalking", false);
@@ -68,7 +81,7 @@ namespace UI
             img.raycastTarget = mode == 'i';
             PlayerController.Instance.canMove = true;
 
-            if (mode == 'o')
+            if (mode is 'o' or 'r')
             {
                 SceneManager.LoadScene(sceneToLoad);
             }

@@ -35,13 +35,11 @@ public class LaserWithParticle : MonoBehaviour
             RaycastHit2D hit = Physics2D.Raycast(laserFirePoint.position, transform.right);
             if (hit)
             {
-                
-
                 if (hit.collider is CapsuleCollider2D)
                 {
                     if (!soundWasPlayed)
                     {
-                        SoundEffectsPlayer.GetInstance().Hurt();
+                        SoundEffectsPlayer.Instance.Hurt();
                         soundWasPlayed = true;
                     }
                     Debug.Log(hit.collider);

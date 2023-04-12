@@ -2,18 +2,18 @@ using UnityEngine;
 
 public class SoundEffectsPlayer : MonoBehaviour
 {
-    private static SoundEffectsPlayer _instance;
- 
-    public static SoundEffectsPlayer GetInstance()
-    {
-        if (_instance == null)
-            _instance = new SoundEffectsPlayer();
-        return _instance;
-    }
+    public static SoundEffectsPlayer Instance { get; private set; }
 
     private void Awake()
     {
-        _instance = this;
+        if (Instance != null)
+        {
+            Destroy(transform.parent.gameObject);
+            return;
+        }
+        
+        Instance = this;
+        DontDestroyOnLoad(transform.parent.gameObject);
     }
     
     public Animator musicSourceAnimator;

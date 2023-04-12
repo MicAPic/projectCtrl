@@ -28,7 +28,7 @@ public class Door : MonoBehaviour
             
             if (!_soundWasPlayed)
             {
-                SoundEffectsPlayer.GetInstance().Door();
+                SoundEffectsPlayer.Instance.Door();
                 _soundWasPlayed = true;
             }
             
