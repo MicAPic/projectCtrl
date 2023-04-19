@@ -1,4 +1,4 @@
-using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -15,11 +15,17 @@ namespace UI
         private Vector2 _maxSize;
         private RectTransform _rectTransform;
 
+        [Header("Cool Effect (c)")]
+        // TODO: if this is used in a project, don't cross-reference overlays, do everything from 1 scipt instead
+        [SerializeField]
+        private Transition otherOverlay;
+        public bool canTransition = true;
+
         void Awake()
         {
             if (Instance != null)
             {
-                Destroy(this);
+                // Destroy(this);
                 return;
             }
 
@@ -30,15 +36,23 @@ namespace UI
         {
             var size = Mathf.Max(Screen.width, Screen.height);
             _rectTransform = GetComponent<RectTransform>();
-            _maxSize = new Vector2(size, size) * 3;
+            _maxSize = new Vector2(size, size) * 1.5f;
             _rectTransform.sizeDelta = Vector2.zero;
             
-            overlayTransform.sizeDelta = new Vector2(size, size) * 4;
+            // overlayTransform.sizeDelta = new Vector2(size, size) * 4;
 
-            StartCoroutine(Fade('i'));
+            // Fade('i');
         }
 
-        public IEnumerator Fade(char mode, string sceneToLoad="Level 1")
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.U) && canTransition)
+            {
+                Fade('i');
+            }
+        }
+
+        public void Fade(char mode, string sceneToLoad="Level 1")
         {
             // i: into the level
             // o: out of the level
@@ -47,7 +61,7 @@ namespace UI
             
             // TODO: never do this shit again, actually
             
-            Recenter();
+            // Recenter();
             if (mode is not 'i')
             {
                 if (mode is not 'r')
@@ -64,20 +78,14 @@ namespace UI
             }
             var img = GetComponent<Image>();
             img.raycastTarget = false;
-
-            var currentTime = 0.0f;
-            var start = _rectTransform.rect.size;
-            var end = mode == 'i' ? _maxSize : Vector2.zero;
-            Debug.Log($"From {start} to {end}");
             
-            while (currentTime < duration)
-            {
-                currentTime += Time.deltaTime;
-                _rectTransform.sizeDelta = Vector2.Lerp(start, end, currentTime / duration);
-                yield return null;
-            }
+            var end = mode == 'i' ? _maxSize : Vector2.zero;
+            Debug.Log($"From {_rectTransform.rect.size} to {end}");
 
-            _rectTransform.sizeDelta = end;
+            canTransition = false;
+            DOTween.To(() => _rectTransform.sizeDelta,
+                x => _rectTransform.sizeDelta = x, end, duration).OnComplete(EnableEffect);
+            
             img.raycastTarget = mode == 'i';
             PlayerController.Instance.canMove = true;
 
@@ -85,6 +93,13 @@ namespace UI
             {
                 SceneManager.LoadScene(sceneToLoad);
             }
+        }
+
+        private void EnableEffect()
+        {
+            otherOverlay.canTransition = true;
+            transform.SetSiblingIndex(0);
+            _rectTransform.sizeDelta = Vector2.zero;
         }
         
         private void Recenter()

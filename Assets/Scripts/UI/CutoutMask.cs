@@ -4,9 +4,8 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public class CutoutMask : Image
+    public class CutoutMask : RawImage
     {
-        // Start is called before the first frame update
         public override Material materialForRendering
         {
             get

@@ -32,7 +32,7 @@ public class Door : MonoBehaviour
                 _soundWasPlayed = true;
             }
             
-            StartCoroutine(Transition.Instance.Fade('o', sceneToLoad:transitionToScene));
+            Transition.Instance.Fade('o', sceneToLoad:transitionToScene);
         }
         
         blockedIcon.SetActive(!ControlController.Instance.isHeld);

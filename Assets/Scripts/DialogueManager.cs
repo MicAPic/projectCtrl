@@ -125,7 +125,7 @@ public class DialogueManager : MonoBehaviour
             // canvas.SetActive(false);
             _canvasAnimator.SetTrigger("Disable");
             Transition.Instance.duration = 3.0f;
-            StartCoroutine(Transition.Instance.Fade(mode[0]));
+            Transition.Instance.Fade(mode[0]);
             StartCoroutine(ShowFinText());
         });
 
