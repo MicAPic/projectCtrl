@@ -18,7 +18,7 @@ public class LaserWithParticle : MonoBehaviour
 
     private void Start()
     {
-        lineRenderer.material.color = Color.red;
+        lineRenderer.material.color = Color.white;
     }
 
     private void Update()
