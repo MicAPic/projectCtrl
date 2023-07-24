@@ -37,6 +37,11 @@ namespace UI
             overlayTransform.sizeDelta = new Vector2(size, size) * 4;
 
             Fade('i');
+            
+            if (CheckpointManager.Instance != null)
+            {
+                CheckpointManager.Instance.LoadPosition();
+            }
         }
 
         public void Fade(char mode, string sceneToLoad="Level 1")
@@ -54,8 +59,10 @@ namespace UI
                 if (mode is not 'r')
                 {
                     SoundEffectsPlayer.Instance.musicSourceAnimator.SetTrigger("Transition");
-                    // un-DontDestroyOnLoad the SFX player:
+                    // un-DontDestroyOnLoad the SFX player & CheckpointManager:
                     SceneManager.MoveGameObjectToScene(SoundEffectsPlayer.Instance.transform.parent.gameObject,
+                        SceneManager.GetActiveScene());
+                    SceneManager.MoveGameObjectToScene(CheckpointManager.Instance.gameObject,
                         SceneManager.GetActiveScene());
                 }
                 
