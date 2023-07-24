@@ -1,4 +1,5 @@
 using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -35,10 +36,10 @@ namespace UI
             
             overlayTransform.sizeDelta = new Vector2(size, size) * 4;
 
-            StartCoroutine(Fade('i'));
+            Fade('i');
         }
 
-        public IEnumerator Fade(char mode, string sceneToLoad="Level 1")
+        public void Fade(char mode, string sceneToLoad="Level 1")
         {
             // i: into the level
             // o: out of the level
@@ -62,29 +63,23 @@ namespace UI
                 PlayerController.Instance.spriteAnimator.SetBool("IsWalking", false);
                 PlayerController.Instance._rigidbody.velocity = Vector2.zero;
             }
-            var img = GetComponent<Image>();
+            var img = GetComponent<Circle>();
             img.raycastTarget = false;
-
-            var currentTime = 0.0f;
+            
             var start = _rectTransform.rect.size;
             var end = mode == 'i' ? _maxSize : Vector2.zero;
             Debug.Log($"From {start} to {end}");
-            
-            while (currentTime < duration)
-            {
-                currentTime += Time.deltaTime;
-                _rectTransform.sizeDelta = Vector2.Lerp(start, end, currentTime / duration);
-                yield return null;
-            }
 
-            _rectTransform.sizeDelta = end;
-            img.raycastTarget = mode == 'i';
-            PlayerController.Instance.canMove = true;
-
-            if (mode is 'o' or 'r')
+            _rectTransform.DOSizeDelta(end, duration).SetEase(Ease.Linear).OnComplete(() =>
             {
-                SceneManager.LoadScene(sceneToLoad);
-            }
+                img.raycastTarget = mode == 'i';
+                PlayerController.Instance.canMove = true;
+
+                if (mode is 'o' or 'r')
+                {
+                    SceneManager.LoadScene(sceneToLoad);
+                }
+            });
         }
         
         private void Recenter()

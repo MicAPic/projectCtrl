@@ -16,23 +16,21 @@ public class Door : MonoBehaviour
     [SerializeField] 
     private GameObject blockedIcon;
     private bool _soundWasPlayed;
+    private bool _collisionDetected;
 
     // Update is called once per frame
     void Update()
     {
         if (Physics2D.OverlapCircle(transform.position, sensitivityRadius, playerLayer) && 
-            ControlController.Instance.isHeld)
+            ControlController.Instance.isHeld && !_collisionDetected)
         {
             PlayerController.Instance.canMove = false;
             PlayerController.Instance._rigidbody.velocity = Vector2.zero;
             
-            if (!_soundWasPlayed)
-            {
-                SoundEffectsPlayer.Instance.Door();
-                _soundWasPlayed = true;
-            }
-            
-            StartCoroutine(Transition.Instance.Fade('o', sceneToLoad:transitionToScene));
+            SoundEffectsPlayer.Instance.Door();
+            _collisionDetected = true;
+
+            Transition.Instance.Fade('o', sceneToLoad:transitionToScene);
         }
         
         blockedIcon.SetActive(!ControlController.Instance.isHeld);

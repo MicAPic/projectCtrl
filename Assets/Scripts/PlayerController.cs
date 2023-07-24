@@ -209,9 +209,12 @@ public class PlayerController : MonoBehaviour
 
     public void Restart()
     {
-        canMove = false;
         _rigidbody.velocity = Vector2.zero;
+        _rigidbody.isKinematic = true;
+        // GetComponent<Collider2D>().enabled = false;
+        
+        canMove = false;
         spriteAnimator.SetBool("IsWalking", false);
-        StartCoroutine(Transition.Instance.Fade('r', SceneManager.GetActiveScene().name));
+        Transition.Instance.Fade('r', SceneManager.GetActiveScene().name);
     }
 }

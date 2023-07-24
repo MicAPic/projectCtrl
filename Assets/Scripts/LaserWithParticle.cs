@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LaserWithParticle : MonoBehaviour
@@ -26,7 +24,7 @@ public class LaserWithParticle : MonoBehaviour
         ShootLaser();
     }
     
-    private bool soundWasPlayed;
+    private bool collisionDetected;
 
     private void ShootLaser()
     {
@@ -37,13 +35,13 @@ public class LaserWithParticle : MonoBehaviour
             {
                 if (hit.collider is CapsuleCollider2D)
                 {
-                    if (!soundWasPlayed)
+                    if (!collisionDetected)
                     {
+                        Debug.Log(hit.collider);
                         SoundEffectsPlayer.Instance.Hurt();
-                        soundWasPlayed = true;
+                        PlayerController.Instance.Restart();
+                        collisionDetected = true;
                     }
-                    Debug.Log(hit.collider);
-                    PlayerController.Instance.Restart();
                 }
 
                 if (!endParticlesPlaying)
@@ -52,7 +50,7 @@ public class LaserWithParticle : MonoBehaviour
                     laserEndParticles.Play(true);
                 }
                 laserEndParticles.gameObject.transform.position = hit.point;
-                float distance = ((Vector2)hit.point - (Vector2)transform.position).magnitude;
+                float distance = (hit.point - (Vector2)transform.position).magnitude;
                 lineRenderer.SetPosition(1, new Vector3(distance, 0, 0));
             }
             Draw2DRay(laserFirePoint.position, hit.point);
