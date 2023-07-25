@@ -44,7 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0276da6611bbd4a3cb2473a9fb105f5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioSource: {fileID: 1254334384788074249, guid: 15df25a98524c4b2baafe36d4233bec7, type: 3}
+  musicSourceAnimator: {fileID: 0}
+  sfxSource: {fileID: 0}
   button: {fileID: 8300000, guid: bfea9b618f3314f45bed264d1b324106, type: 3}
   door: {fileID: 8300000, guid: 2c47232d622114d97b027644926a09e5, type: 3}
   hurt: {fileID: 8300000, guid: 8bff89f49273f4f91988e05c1f87e770, type: 3}
+  checkpoint: {fileID: 8300000, guid: 03083cd471dcb49e4a2b34221f033acd, type: 3}

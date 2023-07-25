@@ -15,6 +15,10 @@ public class Checkpoint : MonoBehaviour
 
     private Tween loopAnimation;
 
+    [Header("Rendering")] 
+    [SerializeField] 
+    private SpriteRenderer[] spriteParts;
+
     [Header("Utility")]
     [SerializeField] 
     private GameObject checkpointManager;
@@ -37,6 +41,9 @@ public class Checkpoint : MonoBehaviour
         {
             var manager = Instantiate(checkpointManager);
             manager.GetComponent<CheckpointManager>().SetPosition();
+            
+            // NB: right now the SFX will activate only when there's 1 checkpoint in a level
+            SoundEffectsPlayer.Instance.Checkpoint();
         }
         else
         {
@@ -44,7 +51,12 @@ public class Checkpoint : MonoBehaviour
         }
 
         loopAnimation.Pause();
-        transform.DOMove(transform.position - fadeOffset, fadeDuration);
-        GetComponent<SpriteRenderer>().DOColor(Color.clear, fadeDuration);
+        foreach (var sprite in spriteParts)
+        {
+            sprite.transform.DOMove(transform.position - fadeOffset, fadeDuration);
+            sprite.DOColor(Color.clear, fadeDuration);
+        }
+
+        GetComponent<Collider2D>().enabled = false;
     }
 }

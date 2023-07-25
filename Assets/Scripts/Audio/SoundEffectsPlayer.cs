@@ -21,6 +21,7 @@ public class SoundEffectsPlayer : MonoBehaviour
     public AudioClip button;
     public AudioClip door;
     public AudioClip hurt;
+    public AudioClip checkpoint;
     
 
     public void Button()
@@ -39,6 +40,12 @@ public class SoundEffectsPlayer : MonoBehaviour
     {
         sfxSource.volume = 0.1f;
         sfxSource.clip = hurt;
+        sfxSource.Play();
+    }
+    public void Checkpoint()
+    {
+        sfxSource.volume = 0.1f;
+        sfxSource.clip = checkpoint;
         sfxSource.Play();
     }
 }
