@@ -1,4 +1,3 @@
-using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -25,6 +24,8 @@ namespace UI
             }
 
             Instance = this;
+
+            GetComponent<Mask>().enabled = true;
         }
 
         void Start()
