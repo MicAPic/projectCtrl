@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7463172578931410798}
   - component: {fileID: 7463172578931410799}
-  - component: {fileID: 7463172578931410796}
   - component: {fileID: 8760834630873414844}
+  - component: {fileID: 4456801096203691200}
   m_Layer: 0
   m_Name: Checkpoint
   m_TagString: Untagged
@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 7463172578931410797}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 29.27, y: 5.23, z: -0.001}
-  m_LocalScale: {x: 1, y: 3.5267, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 3625043607559282579, guid: 19fb86013d8c24d6cb8410c0aadf30fa, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3e5b189b7377845849e2c43bee551e50, type: 3}
   m_Color: {r: 0.3914537, g: 0.6320754, b: 0.2951673, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -86,8 +86,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!60 &7463172578931410796
-PolygonCollider2D:
+--- !u!114 &8760834630873414844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7463172578931410797}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80f244eeae2bb4546bc0e9de73d49e41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loopOffset: {x: 0, y: 0.1, z: 0}
+  loopDuration: 3.1
+  fadeDuration: 0.25
+  fadeOffset: {x: 0, y: -0.2, z: 0}
+  checkpointManager: {fileID: 5813338779941224844, guid: 732c421811d774366aefb9b39a1570e3, type: 3}
+--- !u!61 &4456801096203691200
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -103,28 +120,12 @@ PolygonCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 0.5}
+    oldSize: {x: 1.024, y: 1.024}
     newSize: {x: 1, y: 0.5}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 0, y: 0.25}
-      - {x: -0.5, y: 0}
-      - {x: 0, y: -0.25}
-      - {x: 0.5, y: 0}
---- !u!114 &8760834630873414844
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7463172578931410797}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80f244eeae2bb4546bc0e9de73d49e41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  checkpointManager: {fileID: 5813338779941224844, guid: 732c421811d774366aefb9b39a1570e3, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 1.024, y: 1.024}
+  m_EdgeRadius: 0
